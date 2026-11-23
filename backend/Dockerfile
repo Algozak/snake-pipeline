@@ -1,10 +1,14 @@
 FROM python:3.12-alpine
 WORKDIR /app
 
-COPY requirements.txt /app/
-RUN pip install -r requirements.txt
+RUN addgroup -g 1000 -S snake && adduser -u 1000 -S snake -G snake
 
-COPY backend/ /app/backend
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY --chown=snake:snake backend /app/backend
+
+USER snake
 
 EXPOSE 6500
 
